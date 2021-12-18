@@ -8,9 +8,10 @@ import {
 } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import { CoinApi } from "../API/CoinApi";
 import Loading from "../Components/Loading";
-import Error from "../Components/Error";
+
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinPrice } from "../api";
 
 const Title = styled.h1`
   font-size: 48px;
@@ -75,13 +76,6 @@ const Tab = styled.span<{ isActive: boolean }>`
   }
 `;
 
-interface RouterState {
-  state: {
-    name: string;
-    rank: number;
-  };
-}
-
 interface InfoInterface {
   id: string;
   name: string;
@@ -138,103 +132,76 @@ interface PriceInterface {
 }
 
 const Coin = () => {
-  const { coinId } = useParams<{ coinId: string }>();
-  const { state } = useLocation() as RouterState;
-
-  const [info, setInfo] = useState<InfoInterface>();
-  const [price, setPrice] = useState<PriceInterface>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { coinId } = useParams();
+  const { state } = useLocation();
 
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
 
-  const GetInfoAPI = async () => {
-    setError(null);
-    setInfo(undefined);
-    setLoading(true);
-    const InfoResponse = await CoinApi.Get_Info(`/${coinId}`)
-      .then((response) => {
-        console.log("Info", response.data);
-        setInfo(response.data);
-      })
-      .catch((e) => {
-        setError(e);
-      });
-    setLoading(false);
-    return InfoResponse;
-  };
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoInterface>(
+    ["info", coinId],
+    () => fetchCoinInfo(coinId!)
+  );
+  const { isLoading: priceLoading, data: priceData } = useQuery<PriceInterface>(
+    ["price", coinId],
+    () => fetchCoinPrice(coinId!)
+  );
 
-  const GetPriceAPI = async () => {
-    setError(null);
-    setPrice(undefined);
-    setLoading(true);
-    const PriceResponse = await CoinApi.Get_Price(`/${coinId}`)
-      .then((response) => {
-        console.log("price", response.data);
-        setPrice(response.data);
-      })
-      .catch((e) => {
-        setError(e);
-      });
-    setLoading(false);
-    return PriceResponse;
-  };
-
-  useEffect(() => {
-    GetInfoAPI();
-    GetPriceAPI();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <Error />;
+  const loading = infoLoading || priceLoading;
 
   return (
     <>
       <Helmet>
-        <title>{info?.name}</title>
+        <title>{infoData?.name}</title>
       </Helmet>
       <Container>
         <Header>
           <Title>
-            {state?.name ? state.name : loading ? "Loading..." : info?.name}
+            {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
           </Title>
         </Header>
-        <Overview>
-          <OverviewItem>
-            <span>Rank</span>
-            <span>{info?.rank}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Symbol</span>
-            <span>${info?.symbol}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Open Source</span>
-            <span>{info?.open_source ? "Yes" : "No"}</span>
-          </OverviewItem>
-        </Overview>
-        <Description>{info?.description}</Description>
-        <Overview>
-          <OverviewItem>
-            <span>Total Suply</span>
-            <span>{price?.total_supply}</span>
-          </OverviewItem>
-          <OverviewItem>
-            <span>Max Supply</span>
-            <span>{price?.max_supply}</span>
-          </OverviewItem>
-        </Overview>
 
-        <Tabs>
-          <Tab isActive={chartMatch !== null}>
-            <Link to={`/${coinId}/chart`}>Chart</Link>
-          </Tab>
-          <Tab isActive={priceMatch !== null}>
-            <Link to={`/${coinId}/price`}>Price</Link>
-          </Tab>
-        </Tabs>
-        <Outlet />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <Overview>
+              <OverviewItem>
+                <span>Rank</span>
+                <span>{infoData?.rank}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Symbol</span>
+                <span>${infoData?.symbol}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Open Source</span>
+                <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              </OverviewItem>
+            </Overview>
+            <Description>{infoData?.description}</Description>
+            <Overview>
+              <OverviewItem>
+                <span>Total Suply</span>
+                <span>{priceData?.total_supply}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Max Supply</span>
+                <span>{priceData?.max_supply}</span>
+              </OverviewItem>
+            </Overview>
+
+            <Tabs>
+              <Tab isActive={chartMatch !== null}>
+                <Link to={`/${coinId}/chart`}>Chart</Link>
+              </Tab>
+              <Tab isActive={priceMatch !== null}>
+                <Link to={`/${coinId}/price`}>Price</Link>
+              </Tab>
+            </Tabs>
+            <Outlet />
+          </>
+        )}
       </Container>
     </>
   );

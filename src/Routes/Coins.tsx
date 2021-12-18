@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
 import { CoinApi } from "../API/CoinApi";
 import Error from "../Components/Error";
 import Loading from "../Components/Loading";
@@ -65,55 +67,30 @@ interface CoinInterface {
 }
 
 const Coins = () => {
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const GetCoinAPI = async () => {
-    setError(null);
-    setCoins([]);
-    setLoading(true);
-    const CoinResponse = await CoinApi.Get_Coin("")
-      .then((response) => {
-        console.log("Coin", response.data.slice(0, 100));
-        setCoins(response.data.slice(0, 100));
-      })
-      .catch((e) => {
-        setError(e);
-      });
-    setLoading(false);
-    return CoinResponse;
-  };
-
-  useEffect(() => {
-    GetCoinAPI();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <Error />;
-  if (!coins) return null;
+  const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
 
   return (
     <Container>
       <Header>
         <Title>Coins</Title>
       </Header>
-      <CoinsList>
-        {coins.map((value) => (
-          <Coin key={value.id}>
-            <Img
-              src={`https://cryptoicon-api.vercel.app/api/icon/${value.symbol.toLowerCase()}`}
-              alt=""
-            />
-            <Link
-              to={`/${value.id}`}
-              state={{ name: value.name, rank: value.rank }}
-            >
-              {value.name} &rarr;
-            </Link>
-          </Coin>
-        ))}
-      </CoinsList>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <CoinsList>
+          {data?.slice(0, 100).map((value) => (
+            <Coin key={value.id}>
+              <Img
+                src={`https://cryptoicon-api.vercel.app/api/icon/${value.symbol.toLowerCase()}`}
+                alt=""
+              />
+              <Link to={`/${value.id}`} state={{ name: value.name }}>
+                {value.name} &rarr;
+              </Link>
+            </Coin>
+          ))}
+        </CoinsList>
+      )}
     </Container>
   );
 };
