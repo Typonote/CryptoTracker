@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
-import { CoinApi } from "../API/CoinApi";
-import Error from "../Components/Error";
 import Loading from "../Components/Loading";
 
+import { faShoppingBasket } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ProgressBar from "../Components/ProgressBar";
+
+library.add(faShoppingBasket);
+
 const Title = styled.h1`
-  font-size: 48px;
-  color: ${(props) => props.theme.accentColor};
+  font-size: 3rem;
+  font-weight: 700;
+  color: ${(props) => props.theme.textColor};
 `;
 
 const Container = styled.div`
@@ -34,6 +39,7 @@ const Coin = styled.li`
   align-items: center;
   color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
   border-bottom: 2px solid ${(props) => props.theme.textColor};
@@ -69,15 +75,20 @@ interface CoinInterface {
 
 const Coins = () => {
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
+  console.log("mm", data);
 
   return (
     <>
       <Helmet>
         <title>JK's Coin</title>
       </Helmet>
+      <ProgressBar />
       <Container>
         <Header>
-          <Title>Coins</Title>
+          <Title>
+            <FontAwesomeIcon icon={faShoppingBasket} />
+            &nbsp;Coin Market
+          </Title>
         </Header>
         {isLoading ? (
           <Loading />
@@ -90,7 +101,7 @@ const Coins = () => {
                   alt=""
                 />
                 <Link to={`/${value.id}`} state={{ name: value.name }}>
-                  {value.name} &rarr;
+                  {value.name}
                 </Link>
               </Coin>
             ))}

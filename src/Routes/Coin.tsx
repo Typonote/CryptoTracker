@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Link,
   Outlet,
@@ -12,8 +11,15 @@ import Loading from "../Components/Loading";
 
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinPrice } from "../api";
+import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ProgressBar from "../Components/ProgressBar";
+
+library.add(faArrowAltCircleLeft);
 
 const Title = styled.h1`
+  text-align: center;
   font-size: 48px;
   color: ${(props) => props.theme.accentColor};
 `;
@@ -22,12 +28,21 @@ const Container = styled.div`
   padding: 0px 20px;
   max-width: 500px;
   margin: 0 auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: ${(props) => props.theme.accentColor};
+  }
 `;
 
 const Header = styled.header`
   height: 15vh;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 0.5fr);
   align-items: center;
 `;
 
@@ -74,6 +89,11 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const GoBack = styled.h1`
+  font-size: max(min(3rem, 40px), 20px);
+  color: ${(props) => props.theme.accentColor};
 `;
 
 interface InfoInterface {
@@ -157,11 +177,18 @@ const Coin = () => {
       <Helmet>
         <title>{infoData?.name}</title>
       </Helmet>
+      <ProgressBar />
       <Container>
         <Header>
+          <Link to="/">
+            <GoBack>
+              <FontAwesomeIcon icon={faArrowAltCircleLeft} />
+            </GoBack>
+          </Link>
           <Title>
             {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
           </Title>
+          <div></div>
         </Header>
 
         {loading ? (
@@ -201,7 +228,9 @@ const Coin = () => {
                 </Link>
               </Tab>
               <Tab isActive={priceMatch !== null}>
-                <Link to={`/${coinId}/price`}>Price</Link>
+                <Link to={`/${coinId}/price`} state={{ id: coinId }}>
+                  Price
+                </Link>
               </Tab>
             </Tabs>
             <Outlet />

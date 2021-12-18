@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
 import Loading from "../Components/Loading";
-import { theme } from "../theme";
 
 interface HistoricalInterface {
   time_open: string;

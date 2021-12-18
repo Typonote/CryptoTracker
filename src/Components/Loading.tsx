@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 const Loader = styled.div`
-  height: 100vh;
-  font-size: 4rem;
+  height: 50vh;
+  font-size: 2rem;
   font-weight: 700;
   display: flex;
   align-items: center;
