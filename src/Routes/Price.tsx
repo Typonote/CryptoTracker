@@ -55,14 +55,15 @@ const Container = styled.div`
 
 const TagContainer = styled.div`
   width: 100%;
+  margin-bottom: 1rem;
 `;
 const Tags = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: ${(props) => props.theme.textColor};
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardColor};
+  color: ${(props) => props.theme.textColor};
   padding: 1rem;
   margin-top: 0.8rem;
   border-radius: 15px;

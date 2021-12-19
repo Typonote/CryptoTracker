@@ -4,6 +4,8 @@ import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
 import Loading from "../Components/Loading";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface HistoricalInterface {
   time_open: string;
@@ -30,6 +32,9 @@ const Chart = () => {
   );
 
   console.log(isLoading, data);
+
+  const isDark = useRecoilValue(isDarkAtom);
+
   return (
     <div>
       {isLoading ? (
@@ -45,7 +50,7 @@ const Chart = () => {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             chart: {
               height: 300,

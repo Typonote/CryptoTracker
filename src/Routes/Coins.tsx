@@ -5,17 +5,27 @@ import styled from "styled-components";
 import { fetchCoins } from "../api";
 import Loading from "../Components/Loading";
 
-import { faShoppingBasket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faShoppingBasket,
+  faMoon,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ProgressBar from "../Components/ProgressBar";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
-library.add(faShoppingBasket);
+library.add(faShoppingBasket, faMoon, faSun);
 
 const Title = styled.h1`
   font-size: 3rem;
   font-weight: 700;
   color: ${(props) => props.theme.textColor};
+
+  @media screen and (max-width: 500px) {
+    font-size: 2rem;
+  }
 `;
 
 const Container = styled.div`
@@ -25,6 +35,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
+  margin-top: 1rem;
   height: 15vh;
   display: flex;
   justify-content: center;
@@ -43,6 +54,14 @@ const Coin = styled.li`
   font-weight: 700;
   cursor: pointer;
   border-bottom: 2px solid ${(props) => props.theme.textColor};
+
+  @media screen and (max-width: 500px) {
+    font-size: 1rem;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   a {
     display: flex;
     flex-direction: row;
@@ -63,6 +82,20 @@ const Img = styled.img`
   margin-right: 10px;
 `;
 
+const Btn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 3rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 0.5rem;
+  cursor: pointer;
+
+  @media screen and (max-width: 500px) {
+    font-size: 2rem;
+  }
+`;
+
 interface CoinInterface {
   id: string;
   name: string;
@@ -75,7 +108,9 @@ interface CoinInterface {
 
 const Coins = () => {
   const { isLoading, data } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
-  console.log("mm", data);
+  const isDark = useRecoilValue(isDarkAtom);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
 
   return (
     <>
@@ -84,6 +119,15 @@ const Coins = () => {
       </Helmet>
       <ProgressBar />
       <Container>
+        {isDark ? (
+          <Btn onClick={toggleDarkAtom} style={{ color: "#e1b12c" }}>
+            <FontAwesomeIcon icon={faSun} />
+          </Btn>
+        ) : (
+          <Btn onClick={toggleDarkAtom}>
+            <FontAwesomeIcon icon={faMoon} style={{ color: "#e1b12c" }} />
+          </Btn>
+        )}
         <Header>
           <Title>
             <FontAwesomeIcon icon={faShoppingBasket} />

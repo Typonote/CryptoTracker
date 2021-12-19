@@ -20,7 +20,8 @@ library.add(faArrowAltCircleLeft);
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 48px;
+  font-size: 3rem;
+  font-weight: 700;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -49,7 +50,7 @@ const Header = styled.header`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.cardColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;
@@ -58,8 +59,8 @@ const OverviewItem = styled.div`
   flex-direction: column;
   align-items: center;
   span:first-child {
-    font-size: 10px;
-    font-weight: 400;
+    font-size: 0.8rem;
+    font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 5px;
   }
@@ -79,9 +80,9 @@ const Tabs = styled.div`
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 400;
-  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: ${(props) => props.theme.cardColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
