@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+# CryptoTracker 💸
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Coinpaprika 에서 제공하는 다양한 Coin Api를 이용하여 암호화폐 시세 트래커 만들기 <br/>
+출처: https://api.coinpaprika.com/
 
-## Available Scripts
+## 💻 기술 스택
 
-In the project directory, you can run:
+- React
+- Styled Components
+- Typescript
+- React router dom (version 6)
+- React Query
+- Recoil
+- ApexCharts.js
 
-### `npm start`
+## 🌲 디렉토리 구조
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+src
+├── Components
+│   ├── Error.tsx
+│   ├── Loading.tsx
+│   └── ProgressBar.tsx
+│ 
+├── Routes
+│   ├── Chart.tsx
+│   ├── Coin.tsx
+│   ├── Coins.tsx
+│   └── Price.tsx
+│ 
+├── Api.ts
+├── App.tsx
+├── atoms.ts
+├── index.tsx
+├── Router.tsx
+├── styled.d.ts
+└── theme.ts
+``` 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## ✨ 참고 사항
 
-### `npm test`
+- 노마드 코더: https://nomadcoders.co/
+- 색 조합: https://flatuicolors.com/palette/gb
+- 다크 모드: https://medium.muz.li/stepping-out-of-the-light-tips-for-the-design-and-development-of-dark-mode-bb6f7a38043d
+- react router dom v6: https://ui.dev/react-router-nested-routes/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📄 서비스 예시
 
-### `npm run build`
+1. Web 버전 (600px 이상) <br/>
+![Hnet-image (1)](https://user-images.githubusercontent.com/81430564/146667617-657ce2a3-e666-416f-9aee-7a5aa39b1e13.gif)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. mobile 버전 <br/>
+![Hnet-image (1)](https://user-images.githubusercontent.com/81430564/146667770-bb90ce50-a3d2-4a9c-92ac-9c5a6638cdc0.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## ⚙️ 주요 기능
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- 다크 모드  
+- 거래량이 활발한 100가지의 코인에 대한 리스트 출력
+- 특정한 코인 클릭 시, 코인에 대한 정보 확인 가능
+- 최근 2주간의 시세 변화를 꺾은 선 그래프로 확인 가능
+- 10초 마다 자동으로 값을 업데이트
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
