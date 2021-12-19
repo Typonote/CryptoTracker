@@ -1,6 +1,14 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { darkTheme, lightTheme } from "./theme";
+import { useState } from "react";
+
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+library.add(faMoon, faSun);
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -72,12 +80,38 @@ a {
 }
 `;
 
+const Btn = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  cursor: pointer;
+`;
+
 function App() {
+  const [Dark, setDark] = useState(false);
+
+  const Toggle = () => setDark((current) => !current);
+
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      {Dark ? (
+        <Btn onClick={Toggle} style={{ color: "#e1b12c" }}>
+          <FontAwesomeIcon icon={faSun} />
+        </Btn>
+      ) : (
+        <Btn onClick={Toggle}>
+          <FontAwesomeIcon icon={faMoon} />
+        </Btn>
+      )}
+
+      <ThemeProvider theme={Dark ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }
